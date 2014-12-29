@@ -1,0 +1,11 @@
+{
+    "name": "test",
+    "main": "src/index.html",
+    "single-instance": true,
+    "window": {
+        "width": 640,
+        "height": 640,
+        "toolbar": false,
+        "frame": true
+    }
+}

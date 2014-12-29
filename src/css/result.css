@@ -1,0 +1,26 @@
+div.resultTip {
+    padding: 5px 0px;
+}
+
+div.resultTip a.description{
+    font-size: 16px;
+}
+
+div.resultTip a:link{
+     background-color: rgba(0,0,0,0.5);
+     color: #aaaaff;
+}
+
+div.resultTip span.index{
+    background-color: rgba(0,0,0,0.5);
+    color: #aaaaff;
+}
+
+div.resultTip div.snippet{
+    font-size: 10px;
+    color: #cccccc;
+}
+
+div.resultTip div.snippet span.keyword{
+    background-color: rgba(120,120,0,1.0);
+}

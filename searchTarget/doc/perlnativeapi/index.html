@@ -1,0 +1,868 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>estraier</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+<p><a name="__index__"></a></p>
+<!-- INDEX BEGIN -->
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsys">SYNOPSYS</a></li>
+	<li><a href="#introduction">INTRODUCTION</a></li>
+	<ul>
+
+		<li><a href="#setting">Setting</a></li>
+	</ul>
+
+	<li><a href="#description">DESCRIPTION</a></li>
+	<ul>
+
+		<li><a href="#class_document">Class Document</a></li>
+		<li><a href="#class_condition">Class Condition</a></li>
+		<li><a href="#class_result">Class Result</a></li>
+		<li><a href="#class_database">Class Database</a></li>
+	</ul>
+
+	<li><a href="#example">EXAMPLE</a></li>
+	<ul>
+
+		<li><a href="#gatherer">Gatherer</a></li>
+		<li><a href="#searcher">Searcher</a></li>
+	</ul>
+
+	<li><a href="#license">LICENSE</a></li>
+</ul>
+<!-- INDEX END -->
+
+<hr />
+<p>
+</p>
+<h1><a name="name">NAME</a></h1>
+<p>Perl Binding of Hyper Estraier</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsys">SYNOPSYS</a></h1>
+<pre>
+  use Estraier;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="introduction">INTRODUCTION</a></h1>
+<p>Hyper Estraier is a full-text search system for communities.</p>
+<p>This is a package implementing the core API of Hyper Estraier ( <a href="http://hyperestraier.sourceforge.net/">http://hyperestraier.sourceforge.net/</a> ), including native codes written in C with XS macros.  As it works on Linux, Mac OS X, Windows, and so on, native libraries for each environment are required to run programs.  This package requires Perl 5.8.8 or later versions.</p>
+<p>
+</p>
+<h2><a name="setting">Setting</a></h2>
+<p>Install the latest version of Hyper Estraier.</p>
+<p>Enter the sub directory `perlnative' in the extracted package then perform installation.</p>
+<pre>
+  cd perlnative
+  ./configure
+  make
+  su
+  make install</pre>
+<p>On Linux and other UNIX systems: set the environment variable LD_LIBRARY_PATH to find libraries; ``libestraier.so''.  On Mac OS X: set the environment variable DYLD_LIBRARY_PATH to find libraries; ``libestraier.dylib''.  On Windows: set the environment variable PATH to find libraries; ``estraier.dll''.</p>
+<p>The package `Estraier' should be loaded in each source file of application programs.</p>
+<pre>
+  use Estraier;</pre>
+<p>If you want to enable runtime assertion, set the variable `$Estraier::DEBUG' to be true.</p>
+<pre>
+  $Estraier::DEBUG = 1;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>
+</p>
+<h2><a name="class_document">Class Document</a></h2>
+<dl>
+<dt><strong><a name="item_document">$doc = new Document(<em>draft</em>)</a></strong>
+
+<dd>
+<p>Create a document object.  `draft' specifies a string of draft data.  If it is omitted, an empty document object is created.</p>
+</dd>
+</li>
+<dt><strong><a name="item_add_attr">$doc-&gt;add_attr(<em>name</em>, <em>value</em>)</a></strong>
+
+<dd>
+<p>Add an attribute.  `name' specifies the name of an attribute.  `value' specifies the value of the attribute.  If it is `undef', the attribute is removed.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_add_text">$doc-&gt;add_text(<em>text</em>)</a></strong>
+
+<dd>
+<p>Add a sentence of text.  `text' specifies a sentence of text.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_add_hidden_text">$doc-&gt;add_hidden_text(<em>text</em>)</a></strong>
+
+<dd>
+<p>Add a hidden sentence.  `text' specifies a hidden sentence.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_keywords">$doc-&gt;set_keywords(<em>kwords</em>)</a></strong>
+
+<dd>
+<p>Attach keywords.  `kwords' specifies the reference of a hash object of keywords.  Keys of the hash should be keywords of the document and values should be their scores in decimal string.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_score">$doc-&gt;set_score(<em>score</em>)</a></strong>
+
+<dd>
+<p>Set the substitute score.  `score' specifies the substitute score.  It should be zero or positive.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_id">$doc-&gt;<code>id()</code></a></strong>
+
+<dd>
+<p>Get the ID number.  The return value is the ID number of the document object.  If the object has never been registered, -1 is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_attr_names">$doc-&gt;<code>attr_names()</code></a></strong>
+
+<dd>
+<p>Get an array of attribute names of a document object.  The return value is a reference of an array object of attribute names.</p>
+</dd>
+</li>
+<dt><strong><a name="item_attr">$doc-&gt;<code>attr()</code></a></strong>
+
+<dd>
+<p>Get the value of an attribute.  `name' specifies the name of an attribute.  The return value is the value of the attribute or `undef' if it does not exist.</p>
+</dd>
+</li>
+<dt><strong><a name="item_texts">$doc-&gt;<code>texts()</code></a></strong>
+
+<dd>
+<p>Get an array of sentences of the text.  The return value is a reference of an array object of sentences of the text.</p>
+</dd>
+</li>
+<dt><strong><a name="item_cat_texts">$doc-&gt;<code>cat_texts()</code></a></strong>
+
+<dd>
+<p>Concatenate sentences of the text of a document object.  The return value is concatenated sentences.</p>
+</dd>
+</li>
+<dt><strong><a name="item_keywords">$doc-&gt;<code>keywords()</code></a></strong>
+
+<dd>
+<p>Get attached keywords.  The return value is a reference of a hash object of keywords and their scores in decimal string.  If no keyword is attached, `undef' is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_score">$doc-&gt;<code>score()</code></a></strong>
+
+<dd>
+<p>Get the substitute score.  The return value is the substitute score or -1 if it is not set.</p>
+</dd>
+</li>
+<dt><strong><a name="item_dump_draft">$doc-&gt;<code>dump_draft()</code></a></strong>
+
+<dd>
+<p>Dump draft data of a document object.  The return value is draft data.</p>
+</dd>
+</li>
+<dt><strong><a name="item_make_snippet">$doc-&gt;make_snippet(<em>words</em>, <em>wwidth</em>, <em>hwidth</em>, <em>awidth</em>)</a></strong>
+
+<dd>
+<p>Make a snippet of the body text.  `words' specifies a reference of an array object of words to be highlight.  `wwidth' specifies whole width of the result.  `hwidth' specifies width of strings picked up from the beginning of the text.  `awidth' width of strings picked up around each highlighted word.  The return value is a snippet string of the body text.  There are tab separated values.  Each line is a string to be shown.  Though most lines have only one field, some lines have two fields.  If the second field exists, the first field is to be shown with highlighted, and the second field means its normalized form.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="class_condition">Class Condition</a></h2>
+<dl>
+<dt><strong><a name="item_condition_3a_3asure__3d_1__3c_3c_0">Condition::SURE = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>option: check every N-gram key</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3ausual__3d_1__3c_3c_1">Condition::USUAL = 1 &lt;&lt; 1</a></strong>
+
+<dd>
+<p>option: check N-gram keys skipping by one</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3afast__3d_1__3c_3c_2">Condition::FAST = 1 &lt;&lt; 2</a></strong>
+
+<dd>
+<p>option: check N-gram keys skipping by two</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aagito__3d_1__3c_3c_3">Condition::AGITO = 1 &lt;&lt; 3</a></strong>
+
+<dd>
+<p>option: check N-gram keys skipping by three</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3anoidf__3d_1__3c_3c_4">Condition::NOIDF = 1 &lt;&lt; 4</a></strong>
+
+<dd>
+<p>option: without TF-IDF tuning</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3asimple__3d_1__3c_3c_10">Condition::SIMPLE = 1 &lt;&lt; 10</a></strong>
+
+<dd>
+<p>option: with the simplified phrase</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3arough__3d_1__3c_3c_11">Condition::ROUGH = 1 &lt;&lt; 11</a></strong>
+
+<dd>
+<p>option: with the rough phrase</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aunion__3d_1__3c_3c_15">Condition::UNION = 1 &lt;&lt; 15</a></strong>
+
+<dd>
+<p>option: with the union phrase</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aisect__3d_1__3c_3c_16">Condition::ISECT = 1 &lt;&lt; 16</a></strong>
+
+<dd>
+<p>option: with the intersection phrase</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aeclsimurl__3d_10_2e0">Condition::ECLSIMURL = 10.0</a></strong>
+
+<dd>
+<p>eclipse tuning: consider URL</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aeclserv__3d_100_2e0">Condition::ECLSERV = 100.0</a></strong>
+
+<dd>
+<p>eclipse tuning: on server basis</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aecldir__3d_101_2e0">Condition::ECLDIR = 101.0</a></strong>
+
+<dd>
+<p>eclipse tuning: on directory basis</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition_3a_3aeclfile__3d_102_2e0">Condition::ECLFILE = 102.0</a></strong>
+
+<dd>
+<p>eclipse tuning: on file basis</p>
+</dd>
+</li>
+<dt><strong><a name="item_condition">$cond = new <code>Condition()</code></a></strong>
+
+<dd>
+<p>Create a search condition object.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_phrase">$cond-&gt;set_phrase(<em>phrase</em>)</a></strong>
+
+<dd>
+<p>Set the search phrase.  `phrase' specifies a search phrase.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong>$cond-&gt;add_attr(<em>expr</em>)</strong>
+
+<dd>
+<p>Add an expression for an attribute.  `expr' specifies an expression for an attribute.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_order">$cond-&gt;set_order(<em>expr</em>)</a></strong>
+
+<dd>
+<p>Set the order of a condition object.  `expr' specifies an expression for the order.  By default, the order is by score descending.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_max">$cond-&gt;set_max(<em>max</em>)</a></strong>
+
+<dd>
+<p>Set the maximum number of retrieval.  `max' specifies the maximum number of retrieval.  By default, the number of retrieval is not limited.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_skip">$cond-&gt;set_skip(<em>skip</em>)</a></strong>
+
+<dd>
+<p>Set the number of skipped documents.  `skip' specifies the number of documents to be skipped in the search result.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_options">$cond-&gt;set_options(<em>options</em>)</a></strong>
+
+<dd>
+<p>Set options of retrieval.  `options' specifies options: `Condition::SURE' specifies that it checks every N-gram key, `Condition::USU', which is the default, specifies that it checks N-gram keys with skipping one key, `Condition::FAST' skips two keys, `Condition::AGITO' skips three keys, `Condition::NOIDF' specifies not to perform TF-IDF tuning, `Condition::SIMPLE' specifies to use simplified phrase, `Condition::ROUGH' specifies to use rough phrase, `Condition::UNION' specifies to use union phrase, `Condition::ISECT' specifies to use intersection phrase.  Each option can be specified at the same time by bitwise or.  If keys are skipped, though search speed is improved, the relevance ratio grows less.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_auxiliary">$cond-&gt;set_auxiliary(<em>min</em>)</a></strong>
+
+<dd>
+<p>Set permission to adopt result of the auxiliary index.  `min' specifies the minimum hits to adopt result of the auxiliary index.  If it is not more than 0, the auxiliary index is not used.  By default, it is 32.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_eclipse">$cond-&gt;set_eclipse(<em>limit</em>)</a></strong>
+
+<dd>
+<p>Set the lower limit of similarity eclipse.  `limit' specifies the lower limit of similarity for documents to be eclipsed.  Similarity is between 0.0 and 1.0.  If the limit is added by `Condition::ECLSIMURL', similarity is weighted by URL.  If the limit is `Condition::ECLSERV', similarity is ignored and documents in the same server are eclipsed.  If the limit is `Condition::ECLDIR', similarity is ignored and documents in the same directory are eclipsed.  If the limit is `Condition::ECLFILE', similarity is ignored and documents of the same file are eclipsed.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_distinct">$cond-&gt;set_distinct(<em>name</em>)</a></strong>
+
+<dd>
+<p>Set the attribute distinction filter.  `name' specifies the name of an attribute to be distinct.  The return value is always `undef'.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="class_result">Class Result</a></h2>
+<dl>
+<dt><strong><a name="item_doc_num">$result-&gt;<code>doc_num()</code></a></strong>
+
+<dd>
+<p>Get the number of documents.  The return value is the number of documents in the result.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_doc_id">$result-&gt;get_doc_id(<em>index</em>)</a></strong>
+
+<dd>
+<p>Get the ID number of a document.  `index' specifies the index of a document.  The return value is the ID number of the document or -1 if the index is out of bounds.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_dbidx">$result-&gt;get_dbidx(<em>index</em>)</a></strong>
+
+<dd>
+<p>Get the index of the container database of a document.  `index' specifies the index of a document.  The return value is the index of the container database of the document or -1 if the index is out of bounds.</p>
+</dd>
+</li>
+<dt><strong><a name="item_hint_words">$result-&gt;<code>hint_words()</code></a></strong>
+
+<dd>
+<p>Get an array of hint words.  The return value is a reference of an array of hint words.</p>
+</dd>
+</li>
+<dt><strong><a name="item_hint">$result-&gt;hint(<em>word</em>)</a></strong>
+
+<dd>
+<p>Get the value of a hint word.  `word' specifies a hint word.  An empty string means the number of whole result.  The return value is the number of documents corresponding the hint word.  If the word is in a negative condition, the value is negative.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_score">$result-&gt;get_score(<em>index</em>)</a></strong>
+
+<dd>
+<p>Get the score of a document.  `index' specifies the index of a document.  The return value is the score of the document or -1 if the index is out of bounds.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_shadows">$result-&gt;get_shadows(<em>id</em>)</a></strong>
+
+<dd>
+<p>Get an array of ID numbers of eclipsed docuemnts of a document.  `id' specifies the ID number of a parent document.  The return value is a reference of an array whose elements expresse the ID numbers and their scores alternately.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<h2><a name="class_database">Class Database</a></h2>
+<dl>
+<dt><strong><a name="item_database_3a_3aversion__3d__220_2e0_2e0_22">Database::VERSION = ``0.0.0''</a></strong>
+
+<dd>
+<p>version of Hyper Estraier</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrnoerr__3d_0">Database::ERRNOERR = 0</a></strong>
+
+<dd>
+<p>error code: no error</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrinval__3d_1">Database::ERRINVAL = 1</a></strong>
+
+<dd>
+<p>error code: invalid argument</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerracces__3d_2">Database::ERRACCES = 2</a></strong>
+
+<dd>
+<p>error code: access forbidden</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrlock__3d_3">Database::ERRLOCK = 3</a></strong>
+
+<dd>
+<p>error code: lock failure</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrdb__3d_4">Database::ERRDB = 4</a></strong>
+
+<dd>
+<p>error code: database problem</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrio__3d_5">Database::ERRIO = 5</a></strong>
+
+<dd>
+<p>error code: I/O problem</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrnoitem__3d_6">Database::ERRNOITEM = 6</a></strong>
+
+<dd>
+<p>error code: no item</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aerrmisc__3d_9999">Database::ERRMISC = 9999</a></strong>
+
+<dd>
+<p>error code: miscellaneous</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbreader__3d_1__3c_3c_0">Database::DBREADER = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>open mode: open as a reader</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbwriter__3d_1__3c_3c_1">Database::DBWRITER = 1 &lt;&lt; 1</a></strong>
+
+<dd>
+<p>open mode: open as a writer</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbcreat__3d_1__3c_3c_2">Database::DBCREAT = 1 &lt;&lt; 2</a></strong>
+
+<dd>
+<p>open mode: a writer creating</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbtrunc__3d_1__3c_3c_3">Database::DBTRUNC = 1 &lt;&lt; 3</a></strong>
+
+<dd>
+<p>open mode: a writer truncating</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbnolck__3d_1__3c_3c_4">Database::DBNOLCK = 1 &lt;&lt; 4</a></strong>
+
+<dd>
+<p>open mode: open without locking</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adblcknb__3d_1__3c_3c_5">Database::DBLCKNB = 1 &lt;&lt; 5</a></strong>
+
+<dd>
+<p>open mode: lock without blocking</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbperfng__3d_1__3c_3c_10">Database::DBPERFNG = 1 &lt;&lt; 10</a></strong>
+
+<dd>
+<p>open mode: use perfect N-gram analyzer</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbchrcat__3d_1__3c_3c_11">Database::DBCHRCAT = 1 &lt;&lt; 11</a></strong>
+
+<dd>
+<p>open mode: use character category analyzer</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbsmall_3d_1__3c_3c_20">Database::DBSMALL= 1 &lt;&lt; 20</a></strong>
+
+<dd>
+<p>open mode: small tuning</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adblarge__3d_1__3c_3c_21">Database::DBLARGE = 1 &lt;&lt; 21</a></strong>
+
+<dd>
+<p>open mode: large tuning</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbhuge__3d_1__3c_3c_22">Database::DBHUGE = 1 &lt;&lt; 22</a></strong>
+
+<dd>
+<p>open mode: huge tuning</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbhuge2__3d_1__3c_3c_23">Database::DBHUGE2 = 1 &lt;&lt; 23</a></strong>
+
+<dd>
+<p>open mode: huge tuning second</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbhuge3__3d_1__3c_3c_24">Database::DBHUGE3 = 1 &lt;&lt; 24</a></strong>
+
+<dd>
+<p>open mode: huge tuning third</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbscvoid__3d_1__3c_3c_25">Database::DBSCVOID = 1 &lt;&lt; 25</a></strong>
+
+<dd>
+<p>open mode: store scores as void</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbscint__3d_1__3c_3c_26">Database::DBSCINT = 1 &lt;&lt; 26</a></strong>
+
+<dd>
+<p>open mode: store scores as integer</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3adbscasis__3d_1__3c_3c_27">Database::DBSCASIS = 1 &lt;&lt; 27</a></strong>
+
+<dd>
+<p>open mode: refrain from adjustment of scores</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aidxattrseq__3d_0">Database::IDXATTRSEQ = 0</a></strong>
+
+<dd>
+<p>attribute index type: for multipurpose sequencial access method</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aidxattrstr__3d_1">Database::IDXATTRSTR = 1</a></strong>
+
+<dd>
+<p>attribute index type: for narrowing with attributes as strings</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aidxattrnum__3d_2">Database::IDXATTRNUM = 2</a></strong>
+
+<dd>
+<p>attribute index type: for narrowing with attributes as numbers</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aoptnopurge__3d_1__3c_3c_0">Database::OPTNOPURGE = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>optimize option: omit purging dispensable region of deleted</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aoptnodbopt__3d_1__3c_3c_1">Database::OPTNODBOPT = 1 &lt;&lt; 1</a></strong>
+
+<dd>
+<p>optimize option: omit optimization of the database files</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3amgclean__3d_1__3c_3c_0">Database::MGCLEAN = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>merge option: clean up dispensable regions</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3apdclean__3d_1__3c_3c_0">Database::PDCLEAN = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>put_doc option: clean up dispensable regions</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3apdweight__3d_1__3c_3c_1">Database::PDWEIGHT = 1 &lt;&lt; 1</a></strong>
+
+<dd>
+<p>put_doc option: weight scores statically when indexing</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3aodclean__3d_1__3c_3c_0">Database::ODCLEAN = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>out_doc option: clean up dispensable regions</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3agdnoattr__3d_1__3c_3c_0">Database::GDNOATTR = 1 &lt;&lt; 0</a></strong>
+
+<dd>
+<p>get_doc option: no attributes</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3agdnotext__3d_1__3c_3c_1">Database::GDNOTEXT = 1 &lt;&lt; 1</a></strong>
+
+<dd>
+<p>get_doc option: no text</p>
+</dd>
+</li>
+<dt><strong><a name="item_database_3a_3agdnokwd__3d_1__3c_3c_2">Database::GDNOKWD = 1 &lt;&lt; 2</a></strong>
+
+<dd>
+<p>get_doc option: no keywords</p>
+</dd>
+</li>
+<dt><strong><a name="item_database">$db = new <code>Database()</code></a></strong>
+
+<dd>
+<p>Create a database object.</p>
+</dd>
+</li>
+<dt><strong><a name="item_search_meta">Database::search_meta(dbs, cond)</a></strong>
+
+<dd>
+<p>Search plural databases for documents corresponding a condition.  `dbs' specifies a reference of an array whose elements are database objects.  `cond' specifies a condition object.  The return value is a result object.  On error, `undef' is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_err_msg">$db-&gt;err_msg(<em>ecode</em>)</a></strong>
+
+<dd>
+<p>Get the string of an error code.  `ecode' specifies an error code.  The return value is the string of the error code.</p>
+</dd>
+</li>
+<dt><strong><a name="item_open">$db-&gt;open(<em>name</em>, <em>omode</em>)</a></strong>
+
+<dd>
+<p>Open a database.  `name' specifies the name of a database directory.  `omode' specifies open modes: `Database::DBWRITER' as a writer, `Database::DBREADER' as a reader.  If the mode is `Database::DBWRITER', the following may be added by bitwise or: `Database::DBCREAT', which means it creates a new database if not exist, `Database::DBTRUNC', which means it creates a new database regardless if one exists.  Both of `Database::DBREADER' and  `Database::DBWRITER' can be added to by bitwise or: `Database::DBNOLCK', which means it opens a database file without file locking, or `Database::DBLCKNB', which means locking is performed without blocking.  If `Database::DBNOLCK' is used, the application is responsible for exclusion control.  `Database::DBCREAT' can be added to by bitwise or: `Database::DBPERFNG', which means N-gram analysis is performed against European text also, `Database::DBCHACAT', which means character category analysis is performed instead of N-gram analysis, `Database::DBSMALL', which means the index is tuned to register less than 50000 documents, `Database::DBLARGE', which means the index is tuned to register more than 300000 documents, `Database::DBHUGE', which means the index is tuned to register more than 1000000 documents, `Database::DBHUGE2', which means the index is tuned to register more than 5000000 documents, `Database::DBHUGE3', which means the index is tuned to register more than 10000000 documents, `Database::DBSCVOID', which means scores are stored as void, `Database::DBSCINT', which means scores are stored as 32-bit integer, `Database::DBSCASIS', which means scores are stored as-is and marked not to be tuned when search.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_close">$db-&gt;<code>close()</code></a></strong>
+
+<dd>
+<p>Close the database.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_error">$db-&gt;<code>error()</code></a></strong>
+
+<dd>
+<p>Get the last happened error code.  The return value is the last happened error code.</p>
+</dd>
+</li>
+<dt><strong><a name="item_fatal">$db-&gt;<code>fatal()</code></a></strong>
+
+<dd>
+<p>Check whether the database has a fatal error.  The return value is true if the database has fatal erroor, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_add_attr_index">$db-&gt;add_attr_index(<em>name</em>, <em>type</em>)</a></strong>
+
+<dd>
+<p>Add an index for narrowing or sorting with document attributes.  `name' specifies the name of an attribute.  `type' specifies the data type of attribute index; `Database::IDXATTRSEQ' for multipurpose sequencial access method, `Database::IDXATTRSTR' for narrowing with attributes as strings, `Database::IDXATTRNUM' for narrowing with attributes as numbers.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_flush">$db-&gt;flush(<em>max</em>)</a></strong>
+
+<dd>
+<p>Flush index words in the cache.  `max' specifies the maximum number of words to be flushed.  If it not more than zero, all words are flushed.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_sync">$db-&gt;<code>sync()</code></a></strong>
+
+<dd>
+<p>Synchronize updating contents.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_optimize">$db-&gt;optimize(<em>options</em>)</a></strong>
+
+<dd>
+<p>Optimize the database.  `options' specifies options: `Database::OPTNOPURGE' to omit purging dispensable region of deleted documents, `Database::OPTNODBOPT' to omit optimization of the database files.  The two can be specified at the same time by bitwise or.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_merge">$db-&gt;merge(<em>name</em>, <em>options</em>)</a></strong>
+
+<dd>
+<p>Merge another database.  `name' specifies the name of another database directory.  `options' specifies options: `Database::MGCLEAN' to clean up dispensable regions of the deleted document.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_put_doc">$db-&gt;put_doc(<em>doc</em>, <em>options</em>)</a></strong>
+
+<dd>
+<p>Add a document.  `doc' specifies a document object.  The document object should have the URI attribute.  `options' specifies options: `Database::PDCLEAN' to clean up dispensable regions of the overwritten document.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_out_doc">$db-&gt;out_doc(<em>id</em>, <em>options</em>)</a></strong>
+
+<dd>
+<p>Remove a document.  `id' specifies the ID number of a registered document.  `options' specifies options: `Database::ODCLEAN' to clean up dispensable regions of the deleted document.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_edit_doc">$db-&gt;edit_doc(<em>doc</em>)</a></strong>
+
+<dd>
+<p>Edit attributes of a document.  `doc' specifies a document object.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_doc">$db-&gt;get_doc(<em>id</em>, <em>options</em>)</a></strong>
+
+<dd>
+<p>Retrieve a document.  `id' specifies the ID number of a registered document.  `options' specifies options: `Database::GDNOATTR' to ignore attributes, `Database::GDNOTEXT' to ignore the body text, `Database::GDNOKWD' to ignore keywords.  The three can be specified at the same time by bitwise or.  The return value is a document object.  On error, `undef' is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_get_doc_attr">$db-&gt;get_doc_attr(<em>id</em>, <em>name</em>)</a></strong>
+
+<dd>
+<p>Retrieve the value of an attribute of a document.  `id' specifies the ID number of a registered document.  `name' specifies the name of an attribute.  The return value is the value of the attribute or `undef' if it does not exist.</p>
+</dd>
+</li>
+<dt><strong><a name="item_uri_to_id">$db-&gt;uri_to_id(<em>uri</em>)</a></strong>
+
+<dd>
+<p>Get the ID of a document specified by URI.  `uri' specifies the URI of a registered document.  The return value is the ID of the document.  On error, -1 is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_name">$db-&gt;<code>name()</code></a></strong>
+
+<dd>
+<p>Get the name.  The return value is the name of the database.</p>
+</dd>
+</li>
+<dt><strong>$db-&gt;<code>doc_num()</code></strong>
+
+<dd>
+<p>Get the number of documents.  The return value is the number of documents in the database.</p>
+</dd>
+</li>
+<dt><strong><a name="item_word_num">$db-&gt;<code>word_num()</code></a></strong>
+
+<dd>
+<p>Get the number of unique words.  The return value is the number of unique words in the database.</p>
+</dd>
+</li>
+<dt><strong><a name="item_size">$db-&gt;<code>size()</code></a></strong>
+
+<dd>
+<p>Get the size.  The return value is the size of the database.</p>
+</dd>
+</li>
+<dt><strong><a name="item_search">$db-&gt;search(<em>cond</em>)</a></strong>
+
+<dd>
+<p>Search for documents corresponding a condition.  `cond' specifies a condition object.  The return value is a result object.  On error, `undef' is returned.</p>
+</dd>
+</li>
+<dt><strong><a name="item_scan_doc">$db-&gt;scan_doc(<em>doc</em>, <em>cond</em>)</a></strong>
+
+<dd>
+<p>Check whether a document object matches the phrase of a search condition object definitely.  `doc' specifies a document object.  `cond' specifies a search condition object.  The return value is true if the document matches the phrase of the condition object definitely, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_cache_size">$db-&gt;set_cache_size(<em>size</em>, <em>anum</em>, <em>tnum</em>, <em>rnum</em>)</a></strong>
+
+<dd>
+<p>Set the maximum size of the cache memory.  `size' specifies the maximum size of the index cache.  By default, it is 64MB.  If it is not more than 0, the current size is not changed.  `anum' specifies the maximum number of cached records for document attributes.  By default, it is 8192.  If it is not more than 0, the current size is not changed.  `tnum' specifies the maximum number of cached records for document texts.  By default, it is 1024.  If it is not more than 0, the current size is not changed.  `rnum' specifies the maximum number of cached records for occurrence results.  By default, it is 256.  If it is not more than 0, the current size is not changed.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_add_pseudo_index">$db-&gt;add_pseudo_index(<em>path</em>)</a></strong>
+
+<dd>
+<p>Add a pseudo index directory.  `path' specifies the path of a pseudo index directory.  The return value is true if success, else it is false.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_wildmax">$db-&gt;set_wildmax(<em>num</em>)</a></strong>
+
+<dd>
+<p>Set the maximum number of expansion of wild cards.  `num' specifies the maximum number of expansion of wild cards.  The return value is always `undef'.</p>
+</dd>
+</li>
+<dt><strong><a name="item_set_informer">$db-&gt;set_informer(<em>informer</em>)</a></strong>
+
+<dd>
+<p>Set the callback function to inform of database events.  `informer' specifies the name of an arbitrary function.  The function should have one parameter for a string of a message of each event.  The return value is always `undef'.</p>
+</dd>
+</li>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="example">EXAMPLE</a></h1>
+<p>
+</p>
+<h2><a name="gatherer">Gatherer</a></h2>
+<p>The following is the simplest implementation of a gatherer.</p>
+<pre>
+  use strict;
+  use warnings;
+  use Estraier;
+  $Estraier::DEBUG = 1;</pre>
+<pre>
+  # create the database object
+  my $db = new Database();</pre>
+<pre>
+  # open the database
+  unless($db-&gt;open(&quot;casket&quot;, Database::DBWRITER | Database::DBCREAT)){
+      printf(&quot;error: %s\n&quot;, $db-&gt;err_msg($db-&gt;error()));
+      exit;
+  }</pre>
+<pre>
+  # create a document object
+  my $doc = new Document();</pre>
+<pre>
+  # add attributes to the document object
+  $doc-&gt;add_attr('@uri', &quot;https://estraier.gov/example.txt&quot;);
+  $doc-&gt;add_attr('@title', &quot;Over the Rainbow&quot;);</pre>
+<pre>
+  # add the body text to the document object
+  $doc-&gt;add_text(&quot;Somewhere over the rainbow.  Way up high.&quot;);
+  $doc-&gt;add_text(&quot;There's a land that I heard of once in a lullaby.&quot;);</pre>
+<pre>
+  # register the document object to the database
+  unless($db-&gt;put_doc($doc, Database::PDCLEAN)){
+      printf(&quot;error: %s\n&quot;, $db-&gt;err_msg($db-&gt;error()));
+  }</pre>
+<pre>
+  # close the database
+  unless($db-&gt;close()){
+      printf(&quot;error: %s\n&quot;, $db-&gt;err_msg($db-&gt;error()));
+  }</pre>
+<p>
+</p>
+<h2><a name="searcher">Searcher</a></h2>
+<p>The following is the simplest implementation of a searcher.</p>
+<pre>
+  use strict;
+  use warnings;
+  use Estraier;
+  $Estraier::DEBUG = 1;</pre>
+<pre>
+  # create the database object
+  my $db = new Database();</pre>
+<pre>
+  # open the database
+  unless($db-&gt;open(&quot;casket&quot;, Database::DBREADER)){
+      printf(&quot;error: %s\n&quot;, $db-&gt;err_msg($db-&gt;error()));
+      exit;
+  }</pre>
+<pre>
+  # create a search condition object
+  my $cond = new Condition();</pre>
+<pre>
+  # set the search phrase to the search condition object
+  $cond-&gt;set_phrase(&quot;rainbow AND lullaby&quot;);</pre>
+<pre>
+  # get the result of search
+  my $result = $db-&gt;search($cond);</pre>
+<pre>
+  # for each document in the result
+  my $dnum = $result-&gt;doc_num();
+  foreach my $i (0..$dnum-1){
+      # retrieve the document object
+      my $doc = $db-&gt;get_doc($result-&gt;get_doc_id($i), 0);
+      next unless(defined($doc));
+      # display attributes
+      my $uri = $doc-&gt;attr('@uri');
+      printf(&quot;URI: %s\n&quot;, $uri) if defined($uri);
+      my $title = $doc-&gt;attr('@title');
+      printf(&quot;Title: %s\n&quot;, $title) if defined($title);
+      # display the body text
+      my $texts = $doc-&gt;texts();
+      foreach my $text (@$texts){
+          printf(&quot;%s\n&quot;, $text);
+      }
+  }</pre>
+<pre>
+  # close the database
+  unless($db.close()){
+      printf(&quot;error: %s\n&quot;, $db-&gt;err_msg($db-&gt;error()));
+  }</pre>
+<p>
+</p>
+<hr />
+<h1><a name="license">LICENSE</a></h1>
+<pre>
+ Copyright (C) 2004-2007 Mikio Hirabayashi
+ All rights reserved.</pre>
+<p>Hyper Estraier is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License or any later version.  Hyper Estraier is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.  You should have received a copy of the GNU Lesser General Public License along with Hyper Estraier; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.</p>
+
+</body>
+
+</html>

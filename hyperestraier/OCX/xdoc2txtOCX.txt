@@ -1,0 +1,93 @@
+xdoc2txt.ocx - ActiveX版 xdoc2txt
+
+□ xdoc2txt.exe のActiveX版であり、PDF,WORD,EXCEL,一太郎などの各種バイナリ文書から、
+　テキスト要素を抽出します。テキスト抽出の機能はexe版と同等です。
+
+□ 配布条件
+	xdoc2txt.exeに準じます。
+	xdoc2txt.txtをご覧ください。
+
+□ 対応する文書の種類
+・文書の種類は、拡張子から判別します。次の拡張子のファイルに対応しています。
+	.sxw	OpenOffice.org Writer
+	.sxc	OpenOffice.org Calc
+	.sxi	OpenOffice.org Impress
+	.sxd	OpenOffice.org Draw
+	.odt	Open Document (text documemts)
+	.ods	Open Document (spreadsheet documemts)
+	.odp	Open Document (presentation documemts)
+	.odg	Open Document (drawing documemts)
+	.docx/.docm	WORD 2007
+	.xlsx/.xlsm	Excel 2007
+	.pptx/.pptm	PowerPoint 2007
+	.doc	WORD ver5.0/95/97/2000/Xp/2003
+	.xls	Excel ver5.0/95/97/2000/Xp/2003
+	.ppt	PowerPoint 97/2000/Xp/2003
+	.rtf	リッチテキスト
+	.jaw/jtw 一太郎 ver5
+	.jbw/juw 一太郎 ver6
+	.jfw/jvw 一太郎 ver7
+	.jtd/jtt 一太郎 ver8/9/10/11/12
+	.oas/oa2/oa3	OASYS/Win
+	.bun	新松/松5/松6
+	.wj2/wj3/wk3/wk4/123	Lotus 123 
+	.wri	Windows3.1 Write 
+	.pdf	Adobe PDF
+	.mht	
+	.html	HTML
+	.eml	OutlookExpressのMailエクスポート形式
+
+
+□配布ファイル
+	xdoc2txt.ocx	xdoc2txtのActiveX版
+	zlib.dll	zlibライブラリ
+	sample1/*	VisualBasic6.0サンプル1(Convertの例)
+	sample2/*	VisualBasic6.0サンプル2(Loadの例)
+	sample.hta	HTMLアプリケーションの例
+
+□使用方法
+	(1)xdoc2txt.ocx,zlib.dllをパスの通ったディレクトリに設置します。
+	　※通常 C:\WINDOWS\system32
+
+	(2)regsvr32コマンドでシステムに登録します。
+		regsvr32 /s xdoc2txt.ocx
+	　※削除する場合は、
+		regsvr32 /u xdoc2txt.ocx
+
+□クラス名
+
+クラス名:XDOC2TXT.xdoc2txtCtrl.1
+
+□メソッド
+
+BSTR Convert(BSTR path)	pathで指定したファイルのテキストを抽出
+Load(BSTR path)		xdoc2txtコントロール内に抽出したテキストを表示
+
+□プロパティ
+
+BSTR	Path	抽出するファイルのパス
+long	Ruby	ルビ形式	0:なし 1:（） 2:《》
+long	Cache	PDFの抽出結果をキャッシュする
+
+
+□コーディング例(VisualBasic6.0)
+
+(1)抽出結果を文字列で返す場合
+
+Dim path As String, text As String
+'クラスオブジェクトを取得する
+Set obj = CreateObject("XDOC2TXT.xdoc2txtCtrl.1")
+' 文書のテキストを抽出する
+text = obj.Convert(path)
+
+(2)抽出結果をコントロール内に表示する場合
+
+Dim path As String
+
+call xdoc2txt.Load(path)
+
+
+□履歴
+2008/11/05	xdoc2txt1.31相当。
+2008/08/18	公開。xdoc2txt1.30相当。
+2008/08/11	α版

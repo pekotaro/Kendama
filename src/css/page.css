@@ -1,0 +1,12 @@
+span.highlight {
+    background-color: rgba(51,204,51,0.4);
+}
+
+span.highlight.traced{
+    background-color: rgba(51,204,51,1);
+}
+
+body{
+    padding:0px;
+    margin:0px;
+}

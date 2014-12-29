@@ -1,0 +1,75 @@
+body{
+    height: 100%;
+    overflow:hidden;
+    margin: 0px;
+    padding: 0px;
+}
+
+div#grep_box {
+    width:40%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    position: absolute;
+    left: 60%;
+    padding:0px;
+    margin:0px;
+    vertical-align:bottom/*黒魔術。こう書かないとウィンドウ下部にわずかな隙間ができる*/
+}
+
+iframe#result_box {
+    width:100%;
+    height:calc(100% - 30px);
+    overflow:auto;
+    background-color: rgba(0,0,0,0);
+    padding:30px 0px 0px;
+    margin:0px;
+    border: 0px;
+    vertical-align:bottom/*黒魔術。こう書かないとウィンドウ下部にわずかな隙間ができる*/
+}
+
+iframe#doc_box {
+    width:100%;
+    height:100%;
+    overflow:auto;
+    border: 0px;
+    padding:0px;
+    margin-top:0px;
+    vertical-align:bottom/*黒魔術。こう書かないとウィンドウ下部にわずかな隙間ができる*/
+}
+
+div#grep_form {
+    background-color: rgba(0,0,0,0);
+    width:100%;
+    position: absolute;
+    text-align:left;
+    padding:0px;
+    margin:1%;
+}
+
+div#grep_form input#keyword {
+    width:80%;
+    padding:0px;
+    margin:0px;
+}
+
+div#grep_form button#search {
+    width:15%;
+    padding:0px;
+    margin:0px;
+}
+
+div#toolbar button#history_back{
+    color: #FFFFFF;
+    background-color: rgba(100,100,100,0.7);
+    position: absolute;
+    top:5px;
+    left: 5px;
+}
+
+div#toolbar button#history_forward{
+    color: #FFFFFF;
+    background-color: rgba(100,100,100,0.7);
+    position: absolute;
+    top: 5px;
+    left: 50px;
+}

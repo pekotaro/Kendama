@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="./js/sugar.min.js"></script>
+    <script src="./js/jquery-2.1.1.min.js"></script>
+    <script src="./js/jquery.highlight-4.js"></script>
+    <script src="./js/shortcut.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>ドキュメント全文検索</title>
+</head>
+<body>
+<div hidden id="initialize">
+    <button id="createIndex">インデックス作成</button>
+    ←まずはクリック　※ドキュメント量が多いと数分以上かかる時があるよ！
+</div>
+<div id="toolbar">
+    <button type="button" id="history_back" class="btn btn-default" aria-label="History Back" onclick="history.back()">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    </button>
+    <button type="button" id="history_forward" class="btn btn-default" aria-label="History Forward" onclick=" history.forward()">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    </button>
+</div>
+<div id="grep_box">
+    <div id="grep_form">
+        <input type="text" id="keyword"/>
+        <button id="search" class="btn btn-default" aria-hidden="true">
+            <span class="glyphicon glyphicon-search" aria-hidden="false"></span>
+        </button>
+        <span class="resultNum"></span>
+    </div>
+    <iframe nwfaketop nwdisable id="result_box" src="file:///./src/pages/result.html" type="text/html"
+            name="result_box"></iframe>
+</div>
+<iframe nwfaketop nwdisable id="doc_box" type="text/html" name="doc_box"></iframe>
+
+<script src="./js/util.js"></script>
+<script src="./js/hyperestraier.js"></script>
+<script src="./js/app.js"></script>
+</body>
+</html>

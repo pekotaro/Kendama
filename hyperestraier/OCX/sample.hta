@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html lang="ja">
+<head>
+<title>sample</title>
+<META http-equiv=Content-Type content="text/html; charset=shift_jis">
+
+<script language="javascript" type="text/javascript">
+<!--
+
+function Button1_onclick() {
+
+	s = document.getElementById("FILE01").value;
+
+	XDOC2TXT.Load(s);
+
+	return true;
+}
+
+// -->
+</script>
+
+</head>
+
+<body>
+
+<p>任意のローカルファイルの文書のテキストを、xdoc2txt.ocx で抜き出す例です</p>
+
+<INPUT TYPE="FILE" id="FILE01" SIZE="64" MAXLENGTH="256"> 
+<br />
+<input id="Button1" type="button" value="View File" onclick="Button1_onclick()" />
+<br />
+<p>
+<OBJECT id="XDOC2TXT"
+CLASSID="clsid:4FD6BD6E-471A-48A6-8C52-5E8391ECBA9F"
+WIDTH=400
+HEIGHT=200
+ALIGN=center
+HSPACE=0
+VSPACE=0
+>
+</OBJECT>
+</p>
+
+
+
+</body>
+</html>
