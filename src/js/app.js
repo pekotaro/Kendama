@@ -14,6 +14,7 @@ $j211 = $.noConflict();
             $('div#initialize').show();
             $('div#grep_box').hide();
             $('div#toolbar').hide();
+            $('iframe#doc_box').hide();
         }
 
         /**
@@ -30,12 +31,16 @@ $j211 = $.noConflict();
          * インデックス作成ボタン押下時
          */
         $('div#initialize button#createIndex').click(function () {
+            $('div#please_wait span#loading_msg').show();
+            $('div#please_wait img#loading').show();
             $('button#createIndex').prop("disabled", true);
             he.crawl('./searchTarget', '', function () {
 
                 $('div#initialize').hide();
                 $('div#grep_box').show();
                 $('div#toolbar').show();
+                $('iframe#doc_box').show();
+                alert('インデックス作成完了。検索できます。');
             });
         })
     }());
@@ -92,6 +97,7 @@ $j211 = $.noConflict();
                 for (var i = 0; resultTip = results[i]; i++) {
                     var $index = $('<span>', {class: 'index'}).text(resultTip.index + '.');
                     var $resultTip = $('<div>', {class: 'resultTip'});
+                    if(resultTip.title == null) resultTip.title = ' ( No Title )';
                     var $link = $('<a>', {
                         class: "result_link",
                         href: resultTip.uri,
@@ -102,7 +108,7 @@ $j211 = $.noConflict();
                     $resultTip.append($link);
                     $resultTip.append($snippet);
 
-                    //結果表示領域に追加
+                    //結果表示領域に一件ずつ追加
                     $result_box.find('div#result').append($resultTip);
                 }
                 //検索結果の1件目にフォーカス
@@ -162,22 +168,29 @@ $j211 = $.noConflict();
                 'callback': function () {
                     traceHighLight.prev();
                 }
-            }
-
-            ,
+            },
             'Ctrl+E': {
                 'callback': function () {
                     $('div#grep_box').show();
                     $('div#grep_form input#keyword').blur().focus();
                 }
-            }
-            ,
+            },
             'Esc': {
                 'callback': function () {
                     $('div#grep_box').hide();
                 }
+            },
+            'Alt+Left': {
+                'callback': function () {
+                    window.history.back();
+                }
+            },
+            'Alt+Right': {
+                'callback': function () {
+                    window.history.forward();
+                }
             }
-        }
+        };
 
         //shortcut.jsのaddメソッドに渡すオプションのデフォルト値
         var default_opt = {

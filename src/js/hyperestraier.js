@@ -35,6 +35,12 @@ function HyperEstraier(estcmdPath) {
     } else{
         this.estcmdPath = this.estcmdPath.replace(/\\/g, path.sep);
     }
+    var os = require('os');
+    if(os.type().indexOf('Windows') >= 0){
+        this.encoding = 'cp932';
+    }else{
+        this.encoding = "utf-8";
+    }
 }
 
 /**
@@ -50,7 +56,7 @@ HyperEstraier.prototype = {
     search: function(keywords, callback){
         //検索コマンド実行
         var formattedSafeQuery = this._generateSearchQuery(keywords);
-        var searchCommand = this.estcmdPath + ' search -ic utf-8 -vx -max 50 casket "' + formattedSafeQuery + '"';
+        var searchCommand = this.estcmdPath + ' search -ic ' + this.encoding + ' -vx -max 50 casket "' + formattedSafeQuery + '"';
 
         var _this = this;
         var child = this.cp.exec(searchCommand, { encoding: 'UTF-8' }, function (err, stdout, stderr) {

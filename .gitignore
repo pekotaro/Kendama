@@ -1,6 +1,14 @@
 .idea
+icudtl.dat
 casket
 casket/*
+hyperestraier
+hyperestraier/*
+hyperestraier_mac
+hyperestraier_mac/*
+locals
+locals/*
 searchTarget/*
 *.swp
 projectFilesBackup
+projectFilesBackup/*

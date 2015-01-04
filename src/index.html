@@ -13,8 +13,16 @@
 </head>
 <body>
 <div hidden id="initialize">
-    <button id="createIndex">インデックス作成</button>
-    ←まずはクリック　※ドキュメント量が多いと数分以上かかる時があるよ！
+    <div id="please_wait">
+        <span hidden id="loading_msg">インデックス作成中...</span><br />
+        <img hidden id="loading" src="./img/loading.gif" alt="インデックス作成中"/><br />
+    </div>
+    <button id="createIndex" class="btn btn-primary">インデックス作成</button><br />
+    ↑まずはクリック<br /><br />
+    ※ドキュメント量が多いと数分以上かかる時があるよ！
+</div>
+<div class="background">
+    <span class="glyphicon glyphicon-search" aria-hidden="false"></span>
 </div>
 <div id="toolbar">
     <button type="button" id="history_back" class="btn btn-default" aria-label="History Back" onclick="history.back()">
@@ -26,7 +34,7 @@
 </div>
 <div id="grep_box">
     <div id="grep_form">
-        <input type="text" id="keyword"/>
+        <input type="text" id="keyword" placeholder="検索ワードを入力"/>
         <button id="search" class="btn btn-default" aria-hidden="true">
             <span class="glyphicon glyphicon-search" aria-hidden="false"></span>
         </button>
