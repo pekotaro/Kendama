@@ -1,0 +1,94 @@
+#! /bin/sh
+
+#================================================================
+# estconfig
+# Help configuration for Hyper Estraier
+#================================================================
+
+
+# set variables
+LANG=C ; export LANG
+LC_ALL=C ; export LC_ALL
+progname="estconfig"
+package="hyperestraier"
+version="1.4.13"
+prefix="/usr/local"
+exec_prefix="${prefix}"
+headdir="${prefix}/include"
+libdir="${exec_prefix}/lib"
+bindir="${exec_prefix}/bin"
+libexecdir="${exec_prefix}/libexec"
+datadir="${prefix}/share/${package}"
+cflags="-I${headdir} "
+ldflags="-L${libdir} "
+libs="-lestraier -lresolv  -lpthread  -lqdbm -lz -liconv -lm -lc "
+
+
+# function to show usage
+usage(){
+  printf 'configuration helper for Hyper Estraier\n'
+  printf '\n'
+  printf 'usage:\n'
+  printf '  %s --version\n' "$progname"
+  printf '  %s --prefix\n' "$progname"
+  printf '  %s --execprefix\n' "$progname"
+  printf '  %s --headdir\n' "$progname"
+  printf '  %s --libdir\n' "$progname"
+  printf '  %s --bindir\n' "$progname"
+  printf '  %s --libexecdir\n' "$progname"
+  printf '  %s --datadir\n' "$progname"
+  printf '  %s --cflags\n' "$progname"
+  printf '  %s --ldflags\n' "$progname"
+  printf '  %s --libs\n' "$progname"
+  printf '\n'
+  exit 1
+}
+
+
+# show information
+case "$1" in
+--version)
+  printf '%s\n' "${version}"
+  ;;
+--prefix)
+  printf '%s\n' "${prefix}"
+  ;;
+--execprefix)
+  printf '%s\n' "${exec_prefix}"
+  ;;
+--headdir)
+  printf '%s\n' "${headdir}"
+  ;;
+--libdir)
+  printf '%s\n' "${libdir}"
+  ;;
+--bindir)
+  printf '%s\n' "${bindir}"
+  ;;
+--libexecdir)
+  printf '%s\n' "${libexecdir}"
+  ;;
+--datadir)
+  printf '%s\n' "${datadir}"
+  ;;
+--cflags)
+  printf '%s\n' "${cflags}"
+  ;;
+--ldflags)
+  printf '%s\n' "${ldflags}"
+  ;;
+--libs)
+  printf '%s\n' "${libs}"
+  ;;
+*)
+  usage
+  ;;
+esac
+
+
+# exit normally
+exit 0
+
+
+
+# END OF FILE

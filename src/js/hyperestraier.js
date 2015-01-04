@@ -28,7 +28,7 @@ function HyperEstraier(estcmdPath) {
     /**
      * コマンド実行時に使う子プロセス
      */
-    this.estcmdPath = estcmdPath + '/estcmd.exe';
+    this.estcmdPath = estcmdPath + '/estcmd';
     this.cp = require('child_process');
     if(path.sep == '\\'){
         this.estcmdPath = this.estcmdPath.replace(/\//g, path.sep);
@@ -50,10 +50,10 @@ HyperEstraier.prototype = {
     search: function(keywords, callback){
         //検索コマンド実行
         var formattedSafeQuery = this._generateSearchQuery(keywords);
-        var searchCommand = this.estcmdPath + ' search -ic cp932  -vx -max 50 casket "' + formattedSafeQuery + '"';
+        var searchCommand = this.estcmdPath + ' search -ic utf-8 -vx -max 50 casket "' + formattedSafeQuery + '"';
 
         var _this = this;
-        var child = this.cp.exec(searchCommand, { encoding: 'SJIS' }, function (err, stdout, stderr) {
+        var child = this.cp.exec(searchCommand, { encoding: 'UTF-8' }, function (err, stdout, stderr) {
 
             //終わったらすぐ殺す。
             child.kill();
@@ -78,7 +78,7 @@ HyperEstraier.prototype = {
      */
     crawl: function (docPath, casketPath, callback) {
         //'\\hyperestraier\\estcmd gather -il ja -sd casket ' + targetPath;'
-        var child = this.cp.spawn(this.estcmdPath, ['gather','-il','ja','-sd','casket',docPath], { encoding: 'SJIS', stdio: 'ignore' });
+        var child = this.cp.spawn(this.estcmdPath, ['gather','-il','ja','-sd','-cs','256','casket',docPath], { encoding: 'UTF-8', stdio: 'ignore' });
         child.on('close', function (code) {
             callback();
         });

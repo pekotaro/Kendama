@@ -1,2 +1,6 @@
 .idea
+casket
+casket/*
+searchTarget/*
+*.swp
 projectFilesBackup

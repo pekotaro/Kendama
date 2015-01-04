@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+bindir=${exec_prefix}/bin
+libdir=${exec_prefix}/lib
+libexecdir=${exec_prefix}/libexec
+includedir=${prefix}/include
+datadir=${prefix}/share
+
+Name: Hyper Estraier
+Description: a full-text search system for communities
+Version: 1.4.13
+Requires: qdbm >= 1.8.75
+Libs: -L${libdir}  -lestraier -lresolv  -lpthread  -lqdbm -lz -liconv -lm -lc 
+Cflags: -I${includedir} 

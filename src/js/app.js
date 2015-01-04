@@ -2,7 +2,9 @@
 $j211 = $.noConflict();
 (function ($) {
 
-    const he = new HyperEstraier('./hyperestraier');
+    var os = require('os');
+    var hePath = os.type().has('Windows') ? './hyperestraier' : './hyperestraier_mac';
+    const he = new HyperEstraier(hePath);
 
     //初期処理
     (function initialize() {
@@ -31,7 +33,6 @@ $j211 = $.noConflict();
             $('button#createIndex').prop("disabled", true);
             he.crawl('./searchTarget', '', function () {
 
-                alert('インデックス作成が終了しました。検索できます。');
                 $('div#initialize').hide();
                 $('div#grep_box').show();
                 $('div#toolbar').show();
@@ -40,10 +41,9 @@ $j211 = $.noConflict();
     }());
 
     var path = require('path');
-    const dirPath = path.dirname(process.execPath); //node-webkit実行ファイルのあるフォルダのパス
+    const dirPath = process.cwd(); //node-webkit実行ファイルのあるフォルダのパス
     const BASE_URI = 'file:///' + dirPath.replace(/\\/g, '/'); //\は/に変更
     const DOC_URI = BASE_URI + '/searchTarget/doc/'; //検索対象のURL
-
     var searchQuery = new SearchQuery('');
     var traceHighLight = new TraceHighLight();
 
@@ -139,7 +139,7 @@ $j211 = $.noConflict();
         });
 
         //highlight用のcssをdoc_boxに読み込ませる。
-        var link = '<link rel="stylesheet" href="' + BASE_URI + '/src/css/page.css">';
+        var link = '<link rel="stylesheet" href="' + BASE_URI +  '/src/css/page.css">';
         $(this).contents().find('meta:last').after(link);
 
         //検索ワードにHighLightを設定
