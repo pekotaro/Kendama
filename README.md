@@ -1,9 +1,9 @@
 # HEonNW
 HEonNWはローカルドキュメントの全文検索ツールです。  
 以下のオープンソースプロジェクトを利用させていただいています。
-+ 検索エンジン：HyperEstraier
++ 検索エンジン：HyperEstraier v1.4.13
 + プラットフォーム：node-webkit v10.0.6
-+ ライブラリ：v1.4.13
++ ライブラリ：
   + jQuery v2.1.1
   + jQuery.highlight-4.js
   + sugar.js v1.4.1
