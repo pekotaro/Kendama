@@ -66,10 +66,6 @@ $j211 = $.noConflict();
     $(function () {
         addCommonKeyBind($('body')[0]); //共通キーバインドを設定
 
-        $('div#toolbar button#history_forward').on('click', function () {
-            window.history.forward();
-        });
-
         //検索フォーム内でEnterキーが押されたら検索実行
         shortcut.add("Enter", function () {
             $('div#grep_form button#search').click();

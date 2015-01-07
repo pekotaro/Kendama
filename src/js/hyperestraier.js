@@ -84,7 +84,7 @@ HyperEstraier.prototype = {
      */
     crawl: function (docPath, casketPath, callback) {
         //'\\hyperestraier\\estcmd gather -il ja -sd casket ' + targetPath;'
-        var child = this.cp.spawn(this.estcmdPath, ['gather','-il','ja','-sd','-cs','256','casket',docPath], { encoding: 'UTF-8', stdio: 'ignore' });
+        var child = this.cp.spawn(this.estcmdPath, ['gather','-il','ja','-sd','-cs','256','./casket',docPath], { encoding: 'UTF-8', stdio: 'ignore' });
         child.on('close', function (code) {
             callback();
         });
