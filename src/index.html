@@ -9,36 +9,65 @@
     <script src="./js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="./css/index.css">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <title>ドキュメント全文検索</title>
+    <title>HEonNW - ドキュメント全文検索</title>
 </head>
 <body>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Config</h4>
+            </div>
+            <div class="modal-body">
+                <div id="modal_initialize">
+                    <div id="modal_please_wait">
+                        <span hidden id="modal_loading_msg">インデックス作成中</span><br />
+                        <img hidden id="modal_loading" src="./img/loading.gif" alt="インデックス作成中" /><br />
+                    </div>
+                    <label for="searchTarget"><span>Search Folder</span><input type="file" id="modal_searchTarget" style="display: none" nwdirectory /></label>
+                    <input type="text" placeholder="No folder is selected" class="form-control" id="modal_searchTargetWrap">
+                    <button id="modal_createIndex" class="btn btn-primary" style="display: none">インデックス作成</button><br />
+                    <br /><br />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <center><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></center>
+            </div>
+        </div>
+    </div>
+</div>
 <div hidden id="initialize">
     <div id="please_wait">
-        <span hidden id="loading_msg">インデックス作成中...</span><br />
-        <img hidden id="loading" src="./img/loading.gif" alt="インデックス作成中"/><br />
+        <span hidden id="loading_msg">インデックス作成中</span><br />
+        <img hidden id="loading" src="./img/loading.gif" alt="インデックス作成中" /><br />
     </div>
-    <button id="createIndex" class="btn btn-primary">インデックス作成</button><br />
-    ↑まずはクリック<br /><br />
-    ※ドキュメント量が多いと数分以上かかる時があるよ！
+    <label for="searchTarget"><span>Search Folder</span><input type="file" id="searchTarget" style="display: none" nwdirectory /></label>
+    <input type="text" placeholder="No folder is selected" class="form-control" id="searchTargetWrap">
+    <button id="createIndex" class="btn btn-primary" style="display: none">インデックス作成</button><br />
+    <br /><br />
 </div>
 <div class="background">
     <span class="glyphicon glyphicon-search" aria-hidden="false"></span>
 </div>
 <div id="toolbar">
-    <button type="button" id="history_back" class="btn btn-default" aria-label="History Back" onclick="history.back()">
+    <button type="button" id="history_back" class="btn btn-default" aria-label="History Back" onclick="history.back();if(focusedResultLink != null)focusedResultLink.focus();">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
     </button>
-    <button type="button" id="history_forward" class="btn btn-default" aria-label="History Forward" onclick=" history.forward()">
+    <button type="button" id="history_forward" class="btn btn-default" aria-label="History Forward" onclick=" history.forward();if(focusedResultLink != null)focusedResultLink.focus();">
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
     </button>
 </div>
 <div id="grep_box">
     <div id="grep_form">
-        <input type="text" id="keyword" placeholder="検索ワードを入力"/>
+        <input type="text" id="keyword" placeholder="検索ワードを入力" autofocus="true"/>
         <button id="search" class="btn btn-default" aria-hidden="true">
             <span class="glyphicon glyphicon-search" aria-hidden="false"></span>
         </button>
-        <span class="resultNum"></span>
+        <button id="config" class="btn btn-default" aria-hidden="true" data-toggle="modal" data-target="#myModal" data-backdrop="static" >
+            <span class="glyphicon glyphicon-cog" aria-hidden="false"></span>
+        </button>
     </div>
     <iframe nwfaketop nwdisable id="result_box" src="./pages/result.html" type="text/html"
             name="result_box"></iframe>

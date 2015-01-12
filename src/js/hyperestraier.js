@@ -56,7 +56,7 @@ HyperEstraier.prototype = {
     search: function(keywords, callback){
         //検索コマンド実行
         var formattedSafeQuery = this._generateSearchQuery(keywords);
-        var searchCommand = this.estcmdPath + ' search -ic ' + this.encoding + ' -vx -max 50 casket "' + formattedSafeQuery + '"';
+        var searchCommand = this.estcmdPath + ' search -ic ' + this.encoding + ' -vx -max 100 casket "' + formattedSafeQuery + '"';
 
         var _this = this;
         var child = this.cp.exec(searchCommand, { encoding: 'UTF-8' }, function (err, stdout, stderr) {
@@ -73,6 +73,31 @@ HyperEstraier.prototype = {
             callback(result);
         });
     },
+
+    /**
+     * インデックス更新メソッド
+     */
+    updateIndex: function(docPath, callback){
+        var child = this.cp.spawn(this.estcmdPath, ['gather','-cl', '-il','ja','-sd','-cm', './casket', docPath], { encoding: 'UTF-8', stdio: 'ignore' });
+        child.on('close', function (code) {
+            callback();
+        });
+    },
+
+    purge: function(callback){
+        var child = this.cp.spawn(this.estcmdPath, ['purge','-cl', './casket'], { encoding: 'UTF-8', stdio: 'ignore' });
+        child.on('close',function(){
+            callback();
+        });
+    },
+
+    optimize: function(callback){
+        var child = this.cp.spawn(this.estcmdPath, ['optimize','./casket'], { encoding: 'UTF-8', stdio: 'ignore' });
+        child.on('close',function(){
+            callback();
+        })
+    },
+
 
     /**
      * クロール実行メソッド
@@ -141,7 +166,7 @@ HyperEstraier.prototype = {
             $xml.find('document').each(function (i) {
 
                 //スニペットのkeyタグをspanタグに置き換え。
-                $snippet = $(this).find('snippet');
+                var $snippet = $(this).find('snippet');
                 $snippet.find('key').each(function () {
                     $(this).replaceWith($('<span>', {class: 'keyword'}).text($(this).text()));
                 })

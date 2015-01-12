@@ -1,26 +1,87 @@
-div.resultTip {
-    padding: 5px 0px;
+body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-div.resultTip a.description{
+div#result{
+    padding: 1px 3px;
+}
+
+div#result a.result_link:link{
+    border-style: none;
+    text-decoration: none;
+}
+
+div#result a.result_link:hover > div.resultTip div.title_block{
+    background-color: rgba(52,52,52,0.875);
+}
+
+div#result a.result_link:hover > div.resultTip div.title_block span.index{
+    background-color: rgba(255,255,255,0.175);
+}
+
+div#result a.result_link:hover > div.resultTip{
+    background-color: rgba(222, 222, 222, 0.15);
+}
+
+
+div#result div.resultTip {
+    font-family: 'Lucida Grande', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    overflow: hidden;
+    margin-bottom: 10px;
+    display: block;
+    height: 95px;
+    overflow: hidden;
+}
+
+div#result div.resultTip div.title_block{
+    width:100%;
     font-size: 16px;
-}
-
-div.resultTip a:link{
-     background-color: rgba(0,0,0,0.5);
-     color: #aaaaff;
-}
-
-div.resultTip span.index{
     background-color: rgba(0,0,0,0.5);
-    color: #aaaaff;
+    word-wrap: break-word;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
-div.resultTip div.snippet{
-    font-size: 10px;
-    color: #cccccc;
+div#result div.resultTip div.title_block span.index{
+    padding: 0 3px;
+    background-color: rgba(80,80,80,1);
+    color: #ccccff;
+    width: 1.8em;
 }
 
-div.resultTip div.snippet span.keyword{
+div#result div.resultTip div.title_block span.title{
+    color: #809fff;
+    padding-left: 2px;
+    -webkit-margin-before: 0.2em;
+    -webkit-margin-after: 0em;
+    word-wrap: break-word;
+}
+
+div.resultTip p.snippet{
+    margin-top: 2px;
+    margin-left: 8px;
+    font-size: 10.5px;
+    color: #bbbbbb;
+    display: -webkit-box;
+    -webkit-margin-after: 0em;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    height: 63px;
+}
+
+div.resultTip p.snippet span.keyword{
     background-color: rgba(120,120,0,1.0);
+}
+
+div#result p.noResult{
+    margin: 5px;
+    color: #cccccc;
+    text-indent: -0.25em;
+    padding-left: 0.25em;
+    word-wrap: break-word;
 }

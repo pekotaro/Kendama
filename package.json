@@ -1,10 +1,12 @@
 {
-    "name": "test",
+    "name": "HWonNW",
     "main": "src/index.html",
     "single-instance": true,
     "window": {
-        "width": 640,
-        "height": 640,
+        "width": 720,
+        "height": 720,
+        "min_height": 450,
+        "min_width": 280,
         "toolbar": false,
         "frame": true
     }

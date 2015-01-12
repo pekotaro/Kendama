@@ -1,8 +1,13 @@
 body{
+
+    position: absolute;
     height: 100%;
-    overflow:hidden;
+    width: 100%;
+    overflow: hidden;
     margin: 0px;
     padding: 0px;
+    font-family: 'Lucida Grande', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    vertical-align:bottom;/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
 }
 
 div#grep_box {
@@ -11,9 +16,9 @@ div#grep_box {
     background-color: rgba(0,0,0,0.6);
     position: absolute;
     left: 60%;
-    padding:0px;
-    margin:0px;
-    vertical-align:bottom/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
+    padding:0;
+    margin:0;
+    box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.8);
 }
 
 iframe#result_box {
@@ -21,10 +26,9 @@ iframe#result_box {
     height:100%;
     overflow:auto;
     background-color: rgba(0,0,0,0);
-    padding:30px 0px 0px;
-    margin-top: 5px;
-    border: 0px;
-    vertical-align:bottom/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
+    padding:35px 0 0;
+    border: 0;
+    vertical-align:bottom;/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
 }
 
 iframe#doc_box {
@@ -32,9 +36,7 @@ iframe#doc_box {
     height:100%;
     overflow:auto;
     border: 0px;
-    padding:0px;
-    margin-top:0px;
-    vertical-align:bottom/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
+    vertical-align:bottom;/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
 }
 
 div#grep_form {
@@ -42,20 +44,39 @@ div#grep_form {
     width:100%;
     position: absolute;
     text-align:left;
-    padding:0px;
-    margin:1%;
+    padding:5px;
 }
 
 div#grep_form input#keyword {
-    width:80%;
-    padding:0px;
-    margin:0px;
+    width:calc(75% + 1px);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border: none;
+    padding: 4px 2px 2px 1px;
 }
 
 div#grep_form button#search {
+    position: absolute;
+    right: calc(10% + 2px);
     width:15%;
-    padding:0px;
-    margin:0px;
+    padding: 3px;
+    vertical-align: baseline;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+div#grep_form button#config {
+    width:calc(10% - 5px);/*4px引かないと幅狭い時になぜか改行される。*/
+    padding:2px 0px;
+    float:right;
+    vertical-align: baseline;
+}
+
+div#toolbar{
+    top: 0px;
+    bottom: 0px;
 }
 
 div#toolbar button#history_back{
@@ -75,8 +96,27 @@ div#toolbar button#history_forward{
 }
 
 div#initialize{
-    margin-top: 30%;
+    position: absolute;
+    left: 25%;
+    width: 50%;
+    top: 30%;
     text-align: center;
+}
+
+div#initialize button#createIndex{
+    margin-top: 10px;
+}
+
+div#initialize label{
+    text-align: left;
+}
+
+div#initialize input#searchTarget{
+    background-color: lightskyblue;
+}
+
+div#initialize input#searchTargetWrap{
+    background-color: rgba(255, 255, 255, 0.6);
 }
 
 div#initialize div#please_wait{
@@ -84,6 +124,7 @@ div#initialize div#please_wait{
 }
 
 div.background{
+    height: 100px;
     position: absolute;
     text-align: center;
     font-size: 1640%;
@@ -91,4 +132,5 @@ div.background{
     left: calc(50% - 96px);
     color: rgba(0,0,0,0.1);
     z-index: -1;
+    vertical-align:bottom;/*黒魔術。これ書かないと下部にわずかな隙間ができる*/
 }

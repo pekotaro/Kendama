@@ -6,6 +6,11 @@ $j211 = $.noConflict();
     var hePath = os.type().has('Windows') ? './hyperestraier' : './hyperestraier_mac';
     const he = new HyperEstraier(hePath);
 
+    var db = openDatabase('heonnwDb', '1.0', 'for saving heonnw settings', 256 * 1024);
+    db.transaction(function (tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS settings (id integer primary key autoincrement, key unique, val)');
+    });
+
     //初期処理
     (function initialize() {
 
@@ -15,6 +20,33 @@ $j211 = $.noConflict();
             $('div#grep_box').hide();
             $('div#toolbar').hide();
             $('iframe#doc_box').hide();
+            $('div#initialize input#searchTarget').focus();
+            $('div#initialize input#searchTargetWrap').on('focus', function () {
+                $('div#initialize input#searchTarget').click();
+                $(this).blur();
+                return false;
+            });
+            $('div#initialize input#searchTarget').on('change', function () {
+                var path = $(this).val();
+                if(path != '') {
+                    $('div#initialize button#createIndex').show();
+                    $('div#initialize input#searchTargetWrap').val(path);
+                }
+            });
+        }else{
+            var searchTargetPath;
+            $('div#grep_form button#search').prop("disabled", true);
+            db.transaction(function (tx) {
+                tx.executeSql('SELECT key, val FROM settings WHERE key = "path"', [], function (tx, results) {
+                    searchTargetPath = results.rows.item(0).val
+                });
+            });
+            he.updateIndex(searchTargetPath, function(){
+                he.purge(function(){
+                    $('div#grep_form button#search').prop("disabled", false);
+                    console.log('インデックス更新完了');
+                });
+            });
         }
 
         /**
@@ -34,12 +66,16 @@ $j211 = $.noConflict();
             $('div#please_wait span#loading_msg').show();
             $('div#please_wait img#loading').show();
             $('button#createIndex').prop("disabled", true);
-            he.crawl('./searchTarget', '', function () {
+            var path = $('input#searchTargetWrap').val();
+            he.crawl(path, '', function () {
 
-                $('div#initialize').hide();
+                $('div#initialize').remove();
                 $('div#grep_box').show();
                 $('div#toolbar').show();
                 $('iframe#doc_box').show();
+                db.transaction(function (tx) {
+                    tx.executeSql('INSERT OR REPLACE INTO settings (key, val) VALUES ("path", ?)',[path]);
+                });
                 alert('インデックス作成完了。検索できます。');
             });
         })
@@ -48,7 +84,7 @@ $j211 = $.noConflict();
     var path = require('path');
     const dirPath = process.cwd(); //node-webkit実行ファイルのあるフォルダのパス
     const BASE_URI = 'file:///' + dirPath.replace(/\\/g, '/'); //\は/に変更
-    const DOC_URI = BASE_URI + '/searchTarget/doc/'; //検索対象のURL
+    const DOC_URI = BASE_URI + '/searchTarget/'; //検索対象のURL
     var searchQuery = new SearchQuery('');
     var traceHighLight = new TraceHighLight();
 
@@ -74,6 +110,13 @@ $j211 = $.noConflict();
             'target': $('div#grep_form input#keyword')[0]
         });
 
+        shortcut.add("Shift+Tab", function () {
+            return false;
+        }, {
+            'disable_in_input': false,
+            'target': $('div#grep_form input#keyword')[0]
+        });
+
         //検索ボタン押下時の処理
         $('div#grep_form button#search').on('click', function () {
             var $result_box = $('iframe#result_box').contents();
@@ -83,32 +126,41 @@ $j211 = $.noConflict();
 
             //キーワード取得・検索実行
             var input = $("div#grep_form input#keyword").val();
+
             searchQuery = new SearchQuery(input);
             he.search(searchQuery.unsafeKeywords, function (results) {
 
-                if (results.length == 0)return;
+                if (results.length == 0){
+                    var $noResult = $('<p>', {class: 'noResult'}).text('"' + input + '" に一致する情報は見つかりませんでした。');
+                    $result_box.find('div#result').append($noResult);
+                    return;
+                }
 
                 //検索結果を表示
                 var resultTip;
                 for (var i = 0; resultTip = results[i]; i++) {
-                    var $index = $('<span>', {class: 'index'}).text(resultTip.index + '.');
                     var $resultTip = $('<div>', {class: 'resultTip'});
                     if(resultTip.title == null) resultTip.title = ' ( No Title )';
                     var $link = $('<a>', {
                         class: "result_link",
                         href: resultTip.uri,
                         target: 'doc_box'
-                    }).text(resultTip.title);
-                    var $snippet = $('<div>', {class: 'snippet'}).html(resultTip.snippet);
-                    $resultTip.append($index);
-                    $resultTip.append($link);
+                    });
+                    var $index = $('<span>', {class: 'index'}).text(resultTip.index + '.');
+                    var $title = $('<span>', {class: 'title'}).text(resultTip.title);
+                    var $titleBlock = $('<div>', {class: 'title_block'});
+                    var $snippet = $('<p>', {class: 'snippet'}).html(resultTip.snippet); //XXX: snippetの部分htmlでそのまま出してるけどXSSされない？hyperestraierの仕様要確認
+                    $titleBlock.append($index);
+                    $titleBlock.append($title);
+                    $resultTip.append($titleBlock);
                     $resultTip.append($snippet);
+                    $link.append($resultTip);
 
                     //結果表示領域に一件ずつ追加
-                    $result_box.find('div#result').append($resultTip);
+                    $result_box.find('div#result').append($link);
                 }
                 //検索結果の1件目にフォーカス
-                $result_box.find('div#result div.resultTip a')[0].focus();
+                $result_box.find('div#result a.result_link')[0].focus();
             });
         });
     });
@@ -119,6 +171,43 @@ $j211 = $.noConflict();
     $('iframe#result_box').load(function () {
         var $result_box = $('iframe#result_box').contents();
         addCommonKeyBind($result_box[0]);
+
+        $result_box.on('click', 'a.result_link' , function () {
+            this.focus();
+            $(this).find('.title').css('color', 'rgba(150, 140, 210, 0.875').focus();
+        });
+
+        //最後の要素だった時はtab次に行かせないようにする。
+        $result_box.on('keydown', 'a:last', function (e) {
+            if(e.keyCode == 9 /*Tab*/&& !e.shiftKey)return false;
+        });
+
+        $result_box.on('focus', 'a.result_link', function(e){
+            focusedResultLink = this;;
+            var $result = $result_box.find('div#result');
+            var resultTipHeight = $result.height() / $result.find('a.result_link').length;
+            var scrollTopOrz = $result_box.scrollTop(); //focusすると勝手にスクロール時があるので、元々の高さを先に取得
+
+            //次の要素がiframeの表示範囲外ならちょうど収まる位置にスクロールする。
+            var scrollTo;
+            if($(this).offset().top + resultTipHeight > scrollTopOrz + $('iframe#result_box').height()){
+                scrollTo = $(this).offset().top - $('iframe#result_box').height() + resultTipHeight;
+            }else if($(this).offset().top < scrollTopOrz){
+                scrollTo  = $(this).offset().top;
+            }else{
+                scrollTo = scrollTopOrz;
+            }
+            $result_box.scrollTop(scrollTo);
+
+            /* FIXME:上のロジックでスクロールさせた後、iframeが謎の位置に勝手にスクロールすることがある。
+                     この問題は画面サイズ小さい時によく起こる。
+                     原因がわからないため、以下のようにもう一度スクロールさせて一時的な対策としている。
+             */
+            window.setTimeout(function(){
+                $result_box.scrollTop(scrollTo);
+            }, 1);
+        });
+
     });
 
     /*
@@ -157,23 +246,38 @@ $j211 = $.noConflict();
         var shortcuts = {
             'N': {
                 'callback': function () {
+                    //このようにhiddenとvisibleで挟んで再描画させないと、二周目以降かつ、スクロールが無い場合にcssがすぐに適用されない。
+                    doc_box.document.body.style.visibility = 'hidden';
                     traceHighLight.next();
+                    doc_box.document.body.style.visibility = 'visible';
                 }
             },
             'Shift+N': {
                 'callback': function () {
+                    //このようにhiddenとvisibleで挟んで再描画させないと、二周目以降かつ、スクロールが無い場合にcssがすぐに適用されない。
+                    doc_box.document.body.style.visibility = 'hidden';
                     traceHighLight.prev();
+                    doc_box.document.body.style.visibility = 'visible';
                 }
             },
             'Ctrl+E': {
                 'callback': function () {
+                    var isVisible = $('div#grep_form').is(':visible');
                     $('div#grep_box').show();
-                    $('div#grep_form input#keyword').blur().focus();
+                    if(focusedResultLink != null)focusedResultLink.focus();
+                    if(isVisible || $('iframe#result_box').contents().find('a.result_link:focus').length == 0){
+                        $('div#grep_form input#keyword').focus();
+                    }
                 }
             },
             'Esc': {
                 'callback': function () {
                     $('div#grep_box').hide();
+                    return false;
+                },
+                option:{
+                    'disable_in_input': false,
+                    'target': target
                 }
             },
             'Alt+Left': {
@@ -263,4 +367,5 @@ $j211 = $.noConflict();
             doc_box.scrollTo(0, $target.offset().top - 150);
         }
     };
-}($j211))
+
+}($j211));
